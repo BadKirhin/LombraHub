@@ -94,7 +94,8 @@ _G.EncerrarScriptCompleto = close bCls.MouseButton1Click:Connect(close)
 -- 🚀 CARREGAMENTO AUTOMÁTICO E SEGURO DOS SEUS MÓDULOS DE FUNÇÕES
 task.spawn(function()
     pcall(function()
-        https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/game.lua
-        https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/misc.lua
+        loadstring(game:HttpGet(https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/game.lua))
+
+        loadstring(game:HttpGet(https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/misc.lua))
     end)
 end)
