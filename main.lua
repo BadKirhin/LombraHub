@@ -88,7 +88,5 @@ _G.EncerrarScriptCompleto = close bCls.MouseButton1Click:Connect(close)
 -- 🚀 PUXA OS OUTROS MÓDULOS DE DENTRO DA SUA PASTA 'módulos' CORRETAMENTE
 task.spawn(function()
     pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/BadKirhin/LombraHub/main/main.lua?v=" .. math.random(1, 99999)))()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/BadKirhin/LombraHub/main/main.lua?v=" .. math.random(1, 99999)))()
-    end)
-end)
+        https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/game.lua
+        https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/misc.lua
