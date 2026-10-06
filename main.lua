@@ -5,6 +5,7 @@ local rS = game:GetService("RunService")
 if _G.EncerrarScriptCompleto then _G.EncerrarScriptCompleto() end
 _G.ConfigData = {AntiAFK=false,FpsBoost=false,BlackScreen=false,AutoComprar=false,AutoAbrir=false,AutoStart=false,AutoPlay=false}
 
+-- 🎨 PALETA DE CORES (PRETO ABSOLUTO E ROXO #3800FF)
 local C_BG, C_TOP, C_SIDE, C_PURP, C_BRIG, C_WHT, C_DRK, C_ACT, C_INA = Color3.fromRGB(0,0,0), Color3.fromRGB(10,5,20), Color3.fromRGB(15,10,25), Color3.fromHex("#3800FF"), Color3.fromRGB(130,90,255), Color3.fromRGB(245,245,250), Color3.fromRGB(120,110,140), Color3.fromRGB(25,15,50), Color3.fromRGB(15,10,30)
 
 local sGui = Instance.new("ScreenGui", pGui)
@@ -14,9 +15,14 @@ local mF = Instance.new("Frame", sGui)
 mF.Name, mF.Size, mF.Position, mF.BackgroundColor3, mF.BorderSizePixel, mF.Active, mF.ZIndex, mF.Draggable = "MainFrame", UDim2.new(0,580,0,320), UDim2.new(0.5,-290,0.5,-160), C_BG, 0, true, 1, true
 Instance.new("UICorner", mF).CornerRadius = UDim.new(0,10)
 
+-- 🌟 BORDA NEON EM LED (#3800FF) ATIVA E ATUALIZADA
 local mainStroke = Instance.new("UIStroke", mF)
-mainStroke.Name, mainStroke.Color, mainStroke.Thickness = "NeonBorda", C_PURP, 2.5
+mainStroke.Name = "NeonBorda"
+mainStroke.Color = C_PURP 
+mainStroke.Thickness = 2.5 
+mainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
+-- 😈 ROSTO NATIVO DO GENGAR LOMBRADO
 local gFace = Instance.new("Frame", mF)
 gFace.Name, gFace.Size, gFace.Position, gFace.BackgroundTransparency, gFace.ZIndex, gFace.Visible = "GengarFaceNativa", UDim2.new(0,300,0,180), UDim2.new(0,210,0,80), 1, 2, true
 
@@ -25,14 +31,14 @@ local function cEye(pos, rot)
     e.Size, e.Position, e.BackgroundColor3, e.BorderSizePixel, e.Rotation, e.ZIndex = UDim2.new(0,50,0,24), pos, Color3.fromRGB(255,10,50), 0, rot, 3
     Instance.new("UICorner", e).CornerRadius = UDim.new(0,12)
     local pu = Instance.new("Frame", e)
-    pu.Size, pu.Position, pu.BackgroundColor3, pu.ZIndex = UDim2.new(0,10,0,10), UDim2.new(0.4,0,0.2,0), Color3.fromRGB(255,255,255), 4
+    pu.Size, pu.Position, pu.BackgroundColor3, pu.ZIndex = UDim2.new(0,10,0,10), UDim2.new(0.5,2,0.2,0), Color3.fromRGB(255,255,255), 4
     Instance.new("UICorner", pu).CornerRadius = UDim.new(1,0)
 end
 cEye(UDim2.new(0,40,0,40), -20) cEye(UDim2.new(1,-90,0,40), 20)
 
 local function cMth(txt, y)
     local m = Instance.new("TextLabel", gFace)
-    m.Size, m.Position, m.BackgroundTransparency, m.Text, m.TextColor3, m.TextSize, m.Font, m.ZIndex = UDim2.new(0,160,0,30), UDim2.new(0.5,-80,0,y), 1, txt, Color3.fromRGB(35,20,60), 26, Enum.Font.SourceSansBold, 3
+    m.Size, m.Position, m.BackgroundTransparency, m.Text, m.TextColor3, m.TextSize, m.Font, m.ZIndex = UDim2.new(0,160,0,30), UDim2.new(0.5,-80,0,y), 1, txt, Color3.fromRGB(35,20,60), 28, Enum.Font.SourceSansBold, 3
 end
 cMth("▼▼▼▼▼▼▼", 85) cMth("▲▲▲▲▲▲▲", 100)
 
@@ -85,8 +91,10 @@ local function close()
 end
 _G.EncerrarScriptCompleto = close bCls.MouseButton1Click:Connect(close)
 
--- 🚀 PUXA OS OUTROS MÓDULOS DE DENTRO DA SUA PASTA 'módulos' CORRETAMENTE
+-- 🚀 CARREGAMENTO AUTOMÁTICO E SEGURO DOS SEUS MÓDULOS DE FUNÇÕES
 task.spawn(function()
     pcall(function()
         https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/game.lua
         https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/misc.lua
+    end)
+end)
