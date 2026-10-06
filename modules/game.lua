@@ -9,11 +9,13 @@ end
 
 local function cTgl(txt, posY, cKey, cb)
     local f = Instance.new("Frame", cG)
-    f.Size, f.Position, f.BackgroundColor3, f.ZIndex = UDim2.new(1,-10,0,28), UDim2.new(0,5,0,posY), Color3.fromRGB(24,20,32), 4
+    f.Size, f.Position, f.BackgroundColor3, f.BorderSizePixel, f.ZIndex = UDim2.new(1,-10,0,28), UDim2.new(0,5,0,posY), Color3.fromRGB(24,20,32), 0, 4
     Instance.new("UICorner", f).CornerRadius = UDim.new(0,5)
     
     local l = Instance.new("TextLabel", f)
     l.Size, l.Position, l.Text, l.TextColor3, l.TextSize, l.BackgroundTransparency, l.ZIndex = UDim2.new(0.7,0,1,0), UDim2.new(0,10,0,0), txt, C_WHT, 12, 1, 4
+    l.Font = Enum.Font.SourceSansBold
+    l.TextXAlignment = Enum.TextXAlignment.Left
     
     local btn = Instance.new("TextButton", f)
     btn.Size, btn.Position, btn.Text, btn.ZIndex = UDim2.new(0,40,0,16), UDim2.new(1,-50,0.5,-8), "", 4
