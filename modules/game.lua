@@ -1,4 +1,3 @@
-
 local cG = _G.LombraUI.cG
 local C_PURP = _G.LombraUI.C_PURP
 local C_WHT = _G.LombraUI.C_WHT
@@ -40,7 +39,6 @@ local function cTgl(txt, posY, cKey, cb)
     end)
 end
 
--- 🔁 MANTIDO: AUTO START PARTIDA
 cTgl("Auto Start Partida (Waves)", 5, "AutoStart", function(e)
     while e and _G.LombraActive and _G.ConfigData.AutoStart do
         local r = game:GetService("ReplicatedStorage"):FindFirstChild("AV_GAME_WAVES_V1_BLINK_RELIABLE_REMOTE")
@@ -48,10 +46,23 @@ cTgl("Auto Start Partida (Waves)", 5, "AutoStart", function(e)
     end
 end)
 
--- 🔁 MANTIDO: AUTO PLAY PARTIDA
 cTgl("Auto Play Partida (Autoplay)", 38, "AutoPlay", function(e)
     while e and _G.LombraActive and _G.ConfigData.AutoPlay do
         local r = game:GetService("ReplicatedStorage"):FindFirstChild("AV_GAME_AUTOPLAY_V1_BLINK_RELIABLE_REMOTE")
         if r then r:FireServer(buf({0}), {}) end task.wait(2)
+    end
+end)
+
+cTgl("Comprar Fenda Temporal (Auto Shop)", 71, "AutoComprar", function(e)
+    while e and _G.LombraActive and _G.ConfigData.AutoComprar do
+        local r = game:GetService("ReplicatedStorage"):FindFirstChild("AV_LOBBY_EVENT_SHOPS_V1_BLINK_RELIABLE_REMOTE")
+        if r then r:FireServer(buf({4,13,1,0,84,101,109,112,111,114,97,108,32,82,105,102,116}), {}) end task.wait(3)
+    end
+end)
+
+cTgl("Abrir Fenda (Auto The Almighty)", 104, "AutoAbrir", function(e)
+    while e and _G.LombraActive and _G.ConfigData.AutoAbrir do
+        local r = game:GetService("ReplicatedStorage"):FindFirstChild("AV_LOBBY_SPECIAL_EVENTS_V1_BLINK_RELIABLE_REMOTE")
+        if r then r:FireServer(buf({14,12,84,104,101,32,65,108,109,105,103,104,116,121}), {}) end task.wait(4)
     end
 end)
