@@ -75,4 +75,3 @@ cTgl("FPS Booster (Remover Texturas)", 71, "FpsBoost", function(e)
 end)
 
 cTgl("Black Screen (Reduzir Render 3D)", 104, "BlackScreen", function(e) rS:Set3dRenderingEnabled(not e) end)
-
