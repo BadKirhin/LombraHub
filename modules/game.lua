@@ -8,28 +8,59 @@ local function buf(l)
 end
 
 local function cTgl(txt, posY, cKey, cb)
-    local f = Instance.new("Frame", cG)
-    f.Size, f.Position, f.BackgroundColor3, f.BorderSizePixel, f.ZIndex = UDim2.new(1,-10,0,28), UDim2.new(0,5,0,posY), Color3.fromRGB(24,20,32), 0, 4
-    Instance.new("UICorner", f).CornerRadius = UDim.new(0,5)
+    local f = Instance.new("Frame")
+    f.Size = UDim2.new(1, -10, 0, 28)
+    f.Position = UDim2.new(0, 5, 0, posY)
+    f.BackgroundColor3 = Color3.fromRGB(24, 20, 32)
+    f.BorderSizePixel = 0
+    f.ZIndex = 4
+    f.Parent = cG
     
-    local l = Instance.new("TextLabel", f)
-    l.Size, l.Position, l.Text, l.TextColor3, l.TextSize, l.BackgroundTransparency, l.ZIndex = UDim2.new(0.7,0,1,0), UDim2.new(0,10,0,0), txt, C_WHT, 12, 1, 4
+    local fCorner = Instance.new("UICorner")
+    fCorner.CornerRadius = UDim.new(0, 5)
+    fCorner.Parent = f
+    
+    local l = Instance.new("TextLabel")
+    l.Size = UDim2.new(0.7, 0, 1, 0)
+    l.Position = UDim2.new(0, 10, 0, 0)
+    l.Text = txt
+    l.TextColor3 = C_WHT
+    l.TextSize = 12
+    l.BackgroundTransparency = 1
+    l.ZIndex = 4
     l.Font = Enum.Font.SourceSansBold
     l.TextXAlignment = Enum.TextXAlignment.Left
+    l.Parent = f
     
-    local btn = Instance.new("TextButton", f)
-    btn.Size, btn.Position, btn.Text, btn.ZIndex = UDim2.new(0,40,0,16), UDim2.new(1,-50,0.5,-8), "", 4
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(1,0)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 40, 0, 16)
+    btn.Position = UDim2.new(1, -50, 0.5, -8)
+    btn.Text = ""
+    btn.ZIndex = 4
+    btn.Parent = f
     
-    local ind = Instance.new("Frame", btn)
-    ind.Size, ind.ZIndex = UDim2.new(0,12,0,12), 4
-    Instance.new("UICorner", ind).CornerRadius = UDim.new(1,0)
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(1, 0)
+    btnCorner.Parent = btn
+    
+    local ind = Instance.new("Frame")
+    ind.Size = UDim2.new(0, 12, 0, 12)
+    ind.ZIndex = 4
+    ind.Parent = btn
+    
+    local indCorner = Instance.new("UICorner")
+    indCorner.CornerRadius = UDim.new(1, 0)
+    indCorner.Parent = ind
     
     local function upd()
         if _G.ConfigData[cKey] then
-            btn.BackgroundColor3, ind.Position, ind.BackgroundColor3 = C_PURP, UDim2.new(1,-14,0.5,-6), Color3.fromRGB(255,255,255)
+            btn.BackgroundColor3 = C_PURP
+            ind.Position = UDim2.new(1, -14, 0.5, -6)
+            ind.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         else
-            btn.BackgroundColor3, ind.Position, ind.BackgroundColor3 = Color3.fromRGB(50,45,60), UDim2.new(0,2,0.5,-6), Color3.fromRGB(140,140,140)
+            btn.BackgroundColor3 = Color3.fromRGB(50, 45, 60)
+            ind.Position = UDim2.new(0, 2, 0.5, -6)
+            ind.BackgroundColor3 = Color3.fromRGB(140, 140, 140)
         end
     end
     upd()
