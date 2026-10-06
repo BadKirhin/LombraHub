@@ -7,28 +7,59 @@ local vIM = game:GetService("VirtualInputManager")
 local p = game:GetService("Players").LocalPlayer
 
 local function cTgl(txt, posY, cKey, cb)
-    local f = Instance.new("Frame", cM)
-    f.Size, f.Position, f.BackgroundColor3, f.BorderSizePixel, f.ZIndex = UDim2.new(1,-10,0,28), UDim2.new(0,5,0,posY), Color3.fromRGB(24,20,32), 0, 4
-    Instance.new("UICorner", f).CornerRadius = UDim.new(0,5)
+    local f = Instance.new("Frame")
+    f.Size = UDim2.new(1, -10, 0, 28)
+    f.Position = UDim2.new(0, 5, 0, posY)
+    f.BackgroundColor3 = Color3.fromRGB(24, 20, 32)
+    f.BorderSizePixel = 0
+    f.ZIndex = 4
+    f.Parent = cM
     
-    local l = Instance.new("TextLabel", f)
-    l.Size, l.Position, l.Text, l.TextColor3, l.TextSize, l.BackgroundTransparency, l.ZIndex = UDim2.new(0.7,0,1,0), UDim2.new(0,10,0,0), txt, C_WHT, 12, 1, 4
+    local fCorner = Instance.new("UICorner")
+    fCorner.CornerRadius = UDim.new(0, 5)
+    fCorner.Parent = f
+    
+    local l = Instance.new("TextLabel")
+    l.Size = UDim2.new(0.7, 0, 1, 0)
+    l.Position = UDim2.new(0, 10, 0, 0)
+    l.Text = txt
+    l.TextColor3 = C_WHT
+    l.TextSize = 12
+    l.BackgroundTransparency = 1
+    l.ZIndex = 4
     l.Font = Enum.Font.SourceSansBold
     l.TextXAlignment = Enum.TextXAlignment.Left
+    l.Parent = f
     
-    local btn = Instance.new("TextButton", f)
-    btn.Size, btn.Position, btn.Text, btn.ZIndex = UDim2.new(0,40,0,16), UDim2.new(1,-50,0.5,-8), "", 4
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(1,0)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 40, 0, 16)
+    btn.Position = UDim2.new(1, -50, 0.5, -8)
+    btn.Text = ""
+    btn.ZIndex = 4
+    btn.Parent = f
     
-    local ind = Instance.new("Frame", btn)
-    ind.Size, ind.ZIndex = UDim2.new(0,12,0,12), 4
-    Instance.new("UICorner", ind).CornerRadius = UDim.new(1,0)
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(1, 0)
+    btnCorner.Parent = btn
+    
+    local ind = Instance.new("Frame")
+    ind.Size = UDim2.new(0, 12, 0, 12)
+    ind.ZIndex = 4
+    ind.Parent = btn
+    
+    local indCorner = Instance.new("UICorner")
+    indCorner.CornerRadius = UDim.new(1, 0)
+    indCorner.Parent = ind
     
     local function upd()
         if _G.ConfigData[cKey] then
-            btn.BackgroundColor3, ind.Position, ind.BackgroundColor3 = C_PURP, UDim2.new(1,-14,0.5,-6), Color3.fromRGB(255,255,255)
+            btn.BackgroundColor3 = C_PURP
+            ind.Position = UDim2.new(1, -14, 0.5, -6)
+            ind.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         else
-            btn.BackgroundColor3, ind.Position, ind.BackgroundColor3 = Color3.fromRGB(50,45,60), UDim2.new(0,2,0.5,-6), Color3.fromRGB(140,140,140)
+            btn.BackgroundColor3 = Color3.fromRGB(50, 45, 60)
+            ind.Position = UDim2.new(0, 2, 0.5, -6)
+            ind.BackgroundColor3 = Color3.fromRGB(140, 140, 140)
         end
     end
     upd()
@@ -50,18 +81,46 @@ cTgl("Anti-AFK (Pulo Simulado)", 5, "AntiAFK", function(e)
     end
 end)
 
-local fRej = Instance.new("Frame", cM)
-fRej.Size, fRej.Position, fRej.BackgroundColor3, fRej.BorderSizePixel, fRej.ZIndex = UDim2.new(1,-10,0,28), UDim2.new(0,5,0,38), Color3.fromRGB(24,20,32), 0, 4
-Instance.new("UICorner", fRej).CornerRadius = UDim.new(0,5)
+-- Painel Rejoin Customizado e Corrigido
+local fRej = Instance.new("Frame")
+fRej.Size = UDim2.new(1, -10, 0, 28)
+fRej.Position = UDim2.new(0, 5, 0, 38)
+fRej.BackgroundColor3 = Color3.fromRGB(24, 20, 32)
+fRej.BorderSizePixel = 0
+fRej.ZIndex = 4
+fRej.Parent = cM
 
-local lRej = Instance.new("TextLabel", fRej)
-lRej.Size, lRej.Position, lRej.Text, lRej.TextColor3, lRej.TextSize, lRej.BackgroundTransparency, lRej.ZIndex = UDim2.new(0.6,0,1,0), UDim2.new(0,10,0,0), "Reconectar ao Servidor", C_WHT, 12, 1, 4
+local fRejCorner = Instance.new("UICorner")
+fRejCorner.CornerRadius = UDim.new(0, 5)
+fRejCorner.Parent = fRej
+
+local lRej = Instance.new("TextLabel")
+lRej.Size = UDim2.new(0.6, 0, 1, 0)
+lRej.Position = UDim2.new(0, 10, 0, 0)
+lRej.Text = "Reconectar ao Servidor"
+lRej.TextColor3 = C_WHT
+lRej.TextSize = 12
+lRej.BackgroundTransparency = 1
+lRej.ZIndex = 4
 lRej.Font = Enum.Font.SourceSansBold
 lRej.TextXAlignment = Enum.TextXAlignment.Left
+lRej.Parent = fRej
 
-local bRej = Instance.new("TextButton", fRej)
-bRej.Size, bRej.Position, bRej.BackgroundColor3, bRej.Text, bRej.TextColor3, bRej.TextSize, bRej.Font, bRej.ZIndex = UDim2.new(0,70,0,18), UDim2.new(1,-80,0.5,-9), C_PURP, "Rejoin", C_WHT, 11, Enum.Font.SourceSansBold, 4
-Instance.new("UICorner", bRej).CornerRadius = UDim.new(0,4)
+local bRej = Instance.new("TextButton")
+bRej.Size = UDim2.new(0, 70, 0, 18)
+bRej.Position = UDim2.new(1, -80, 0.5, -9)
+bRej.BackgroundColor3 = C_PURP
+bRej.Text = "Rejoin"
+bRej.TextColor3 = C_WHT
+bRej.TextSize = 11
+bRej.Font = Enum.Font.SourceSansBold
+bRej.ZIndex = 4
+bRej.Parent = fRej
+
+local bRejCorner = Instance.new("UICorner")
+bRejCorner.CornerRadius = UDim.new(0, 4)
+bRejCorner.Parent = bRej
+
 bRej.MouseButton1Click:Connect(function()
     local ts = game:GetService("TeleportService")
     if game.JobId == "" then ts:Teleport(game.PlaceId, p) else ts:TeleportToPlaceInstance(game.PlaceId, game.JobId, p) end
