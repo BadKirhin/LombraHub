@@ -95,10 +95,10 @@ task.spawn(function()
     task.wait(0.2)
     pcall(function()
         -- Baixa e já executa passando os contêineres como argumentos reais
-        local gameModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/game.lua")) .. math.random(1, 99999)))
+        local gameModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/game.lua"))" .. math.random(1, 99999)))
         if gameModule then task.spawn(gameModule, cG, C_PURP, C_WHT) end
         
-        local miscModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/misc.lua")) .. math.random(1, 99999)))
+        local miscModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/misc.lua"))" .. math.random(1, 99999)))
         if miscModule then task.spawn(miscModule, cM, C_PURP, C_WHT) end
     end)
 end)
