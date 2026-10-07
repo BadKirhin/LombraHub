@@ -83,7 +83,6 @@ bG.MouseButton1Click:Connect(function() tab(cG) end)
 bM.MouseButton1Click:Connect(function() tab(cM) end)
 
 _G.LombraActive = true
-_G.LombraUI = {cG = cG, cM = cM, C_PURP = C_PURP, C_WHT = C_WHT}
 
 local function close()
     _G.LombraActive = false _G.EncerrarScriptCompleto = nil
@@ -91,11 +90,16 @@ local function close()
 end
 _G.EncerrarScriptCompleto = close bCls.MouseButton1Click:Connect(close)
 
--- 🚀 CARREGAMENTO AUTOMÁTICO E SEGURO DOS SEUS MÓDULOS DE FUNÇÕES
+-- 🚀 SISTEMA DE INJEÇÃO DIRETA DE INTERFACE (IMUNE A ERROS DE ENVIRONMENT)
 task.spawn(function()
-    task.wait(1.3) -- Dá tempo para o Roblox criar os Frames na tela
-    pcall(function()        loadstring(game:HttpGet("https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/game.lua"))
-
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/misc.lua"))
+    task.wait(0.2)
+    pcall(function()
+        -- Baixa e já executa passando os contêineres como argumentos reais
+        local gameModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/game.lua")) .. math.random(1, 99999)))
+        if gameModule then task.spawn(gameModule, cG, C_PURP, C_WHT) end
+        
+        local miscModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/misc.lua")) .. math.random(1, 99999)))
+        if miscModule then task.spawn(miscModule, cM, C_PURP, C_WHT) end
     end)
 end)
+
