@@ -1,8 +1,6 @@
 local cG = _G.LombraUI.cG
 local C_PURP = _G.LombraUI.C_PURP
 local C_WHT = _G.LombraUI.C_WHT
-
-
 local function buf(l)
     local b = buffer.create(#l)
     for i=1,#l do buffer.writeu8(b, i-1, l[i]) end return b
