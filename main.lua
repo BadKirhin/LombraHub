@@ -93,8 +93,8 @@ _G.EncerrarScriptCompleto = close bCls.MouseButton1Click:Connect(close)
 
 -- 🚀 CARREGAMENTO AUTOMÁTICO E SEGURO DOS SEUS MÓDULOS DE FUNÇÕES
 task.spawn(function()
-    pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/game.lua"))
+    task.wait(0.3) -- Dá tempo para o Roblox criar os Frames na tela
+    pcall(function()        loadstring(game:HttpGet("https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/game.lua"))
 
         loadstring(game:HttpGet("https://raw.githubusercontent.com/BadKirhin/LombraHub/main/modules/misc.lua"))
     end)
