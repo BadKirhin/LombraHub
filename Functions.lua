@@ -9,7 +9,7 @@ local function buf(l)
     local b = buffer.create(#l)
     for i=1,#l do buffer.writeu8(b, i-1, l[i]) end
     return b
-end
+
 
 function F.AutoStart(e)
     while e and _G.LombraHubAtivo and _G.ConfigData.AutoStart do
