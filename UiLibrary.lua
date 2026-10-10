@@ -80,7 +80,7 @@ function UI:CreateTab(nome, icone)
     table.insert(UI.BotoesAba, b)
 
     b.MouseButton1Click:Connect(function()
-        for i, aba em ipairs(UI.Abas) do
+        for i, aba in ipairs(UI.Abas) do
             aba.Visible = (aba == ctn)
             UI.BotoesAba[i].BackgroundColor3 = (aba == ctn and Color3.fromRGB(25, 15, 50) or Color3.fromRGB(15, 10, 30))
             UI.BotoesAba[i].TextColor3 = (aba == ctn and Color3.fromRGB(130, 90, 255) or Color3.fromRGB(120, 110, 140))
