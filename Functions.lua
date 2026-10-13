@@ -1,4 +1,3 @@
--- Functions.lua
 local F = {}
 local p = game:GetService("Players").LocalPlayer
 local vIM = game:GetService("VirtualInputManager")
@@ -30,31 +29,53 @@ function F.AutoPlay(e)
     end
 end
 
+function F.AutoComprar(e)
+    while e and _G.LombraHubAtivo and _G.ConfigData.AutoComprar do
+        local r = game:GetService("ReplicatedStorage"):FindFirstChild("AV_LOBBY_EVENT_SHOPS_V1_BLINK_RELIABLE_REMOTE")
+        if r then r:FireServer(buf({4,13,1,0,84,101,109,112,111,114,97,108,32,82,105,102,116}), {}) end
+        task.wait(3)
+    end
+end
+
+function F.AutoAbrir(e)
+    while e and _G.LombraHubAtivo and _G.ConfigData.AutoAbrir do
+        local r = game:GetService("ReplicatedStorage"):FindFirstChild("AV_LOBBY_SPECIAL_EVENTS_V1_BLINK_RELIABLE_REMOTE")
+        if r then r:FireServer(buf({14,12,84,104,101,32,65,108,109,105,103,104,116,121}), {}) end
+        task.wait(4)
+    end
+end
+
 function F.AutoArise(e)
     while e and _G.LombraHubAtivo and _G.ConfigData.AutoArise do
         local r = game:GetService("ReplicatedStorage"):FindFirstChild("AV_GAME_MONARCH_ARISE_V1_BLINK_RELIABLE_REMOTE")
         if r then
-            -- Busca dinâmica por prompts ativos de Arise no mapa
-            for _, obj in pairs(workspace:GetDescendants()) do
-                if obj:IsA("ProximityPrompt") and (obj.ObjectText == "Arise" or obj.ActionText == "Arise") then
-                    local parentModel = obj.Parent
-                    if parentModel then
-                        -- Tenta extrair o UID de Atributos, Valores de String ou do nome do objeto
-                        local uuid = parentModel:GetAttribute("UID") or 
-                                     parentModel:FindFirstChild("UID") and parentModel.UID.Value or 
-                                     parentModel.Name
+            -- Mapeia o caminho exato descoberto no Dex Explorer dentro da câmera ativa
+            local cam = workspace:FindFirstChildOfClass("Camera")
+            local clientWorld = cam and cam:FindFirstChild("ClientWorld")
+            local mapEffects = clientWorld and clientWorld:FindFirstChild("MapEffects")
+            
+            if mapEffects then
+                for _, obj in pairs(mapEffects:GetChildren()) do
+                    -- Verifica se o nome do modelo começa com o prefixo do Arise
+                    if string.sub(obj.Name, 1, 13) == "MonarchArise_" then
+                        -- Corta o prefixo e isola apenas o UUID (Ex: 2478ae8a-be67...)
+                        local uuid = string.sub(obj.Name, 14)
                         
-                        -- Valida o formato mínimo de string de identificação (UUIDs possuem mais de 30 caracteres)
-                        if type(uuid) == "string" and #uuid >= 30 then
-                            -- Estrutura inicial gravada nos logs: 4 (ação), sequenciador, indexadores
+                        -- Garante que o ProximityPrompt ainda existe e está ativo na hierarquia interna
+                        local hrp = obj:FindFirstChild("HumanoidRootPart")
+                        local anchor = hrp and hrp:FindFirstChild("ArisePromptAnchor")
+                        local prompt = anchor and anchor:FindFirstChild("MonarchArise")
+                        
+                        if prompt and type(uuid) == "string" and #uuid >= 30 then
+                            -- Estrutura inicial do buffer gravada pelo Cobalt: 4 (ação), contador de pacotes, zeros, indexador (2)
                             local bytesTable = {4, arisePacketSequence, 0, 0, 0, 2}
                             
-                            -- Injeta o UUID convertido caractere por caractere para formato numérico ASCII
+                            -- Injeta o UUID convertido caractere por caractere para formato ASCII
                             for i = 1, #uuid do
                                 table.insert(bytesTable, string.byte(uuid, i))
                             end
                             
-                            -- Constrói o buffer físico e dispara o Remote
+                            -- Constrói o objeto de buffer físico e envia ao servidor
                             local finalBuffer = buffer.create(#bytesTable)
                             for i = 1, #bytesTable do
                                 buffer.writeu8(finalBuffer, i - 1, bytesTable[i])
@@ -62,7 +83,7 @@ function F.AutoArise(e)
                             
                             r:FireServer(finalBuffer, nil)
                             
-                            -- Incrementa de forma rotativa o contador de sequência para validar as próximas chamadas
+                            -- Incrementa o contador de forma rotativa (Blink Protocol requirements)
                             arisePacketSequence = (arisePacketSequence >= 255) and 1 or (arisePacketSequence + 1)
                             task.wait(0.1) -- Proteção rápida anti-kick por spam de rede
                         end
@@ -70,7 +91,7 @@ function F.AutoArise(e)
                 end
             end
         end
-        task.wait(0.8) -- Varre o mapa periodicamente à procura de novos abates
+        task.wait(0.8) -- Varre a pasta de efeitos periodicamente à procura de novos abates
     end
 end
 
