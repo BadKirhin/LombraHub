@@ -1,7 +1,8 @@
 if _G.EncerrarScriptCompleto then _G.EncerrarScriptCompleto() end
 
 _G.LombraHubAtivo = true
-_G.ConfigData = {AntiAFK=false, FpsBoost=false, BlackScreen=false, AutoComprar=false, AutoAbrir=false, AutoStart=false, AutoPlay=false, AutoArise=false}
+-- REMOVIDO: AutoComprar e AutoAbrir foram completamente eliminados da existência
+_G.ConfigData = {AntiAFK=false, FpsBoost=false, BlackScreen=false, AutoStart=false, AutoPlay=false, AutoArise=false}
 
 local buster = "?cache=" .. math.random(1, 99999)
 
@@ -14,10 +15,10 @@ local tabVisual = UiLibrary:CreateTab("Visualizar", "👻")
 local tabGame = UiLibrary:CreateTab("Game", "🎮")
 local tabMisc = UiLibrary:CreateTab("Misc", "⚙️")
 
--- ⚙️ Elementos da Aba Game
+-- ⚙️ Elementos da Aba Game (Apenas automações de partida limpas)
 UiLibrary:CreateToggle(tabGame, "Auto Start Partida (Waves)", 5, "AutoStart", Functions.AutoStart)
 UiLibrary:CreateToggle(tabGame, "Auto Play Partida (Autoplay)", 38, "AutoPlay", Functions.AutoPlay)
-UiLibrary:CreateToggle(tabGame, "Auto Arise Monarca (Tween Farm)", 137, "AutoArise", Functions.AutoArise)
+UiLibrary:CreateToggle(tabGame, "Auto Arise Monarca (Hold Tween)", 71, "AutoArise", Functions.AutoArise)
 
 -- ⚙️ Elementos da Aba Misc
 UiLibrary:CreateToggle(tabMisc, "Anti-AFK (Pulo Simulado)", 5, "AntiAFK", Functions.AntiAFK)
