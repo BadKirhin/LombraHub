@@ -64,13 +64,12 @@ function UI:CreateTab(nome, icone)
     local b = Instance.new("TextButton", UI.Sidebar)
     b.Size, b.Position, b.BackgroundColor3, b.Text, b.TextColor3, b.TextSize, b.Font, b.TextXAlignment, b.ZIndex = UDim2.new(1,-20,0,32), UDim2.new(0,10,0, UI.UltimaPosBotao), (ctn.Visible and Color3.fromRGB(25, 15, 50) or Color3.fromRGB(15, 10, 30)), icone .. " " .. nome, (ctn.Visible and Color3.fromRGB(130, 90, 255) or Color3.fromRGB(120, 110, 140)), 13, Enum.Font.SourceSansBold, Enum.TextXAlignment.Left, 3
     Instance.new("UICorner", b).CornerRadius = UDim.new(0,6)
-    
+
     UI.UltimaPosBotao = UI.UltimaPosBotao + 37
 
     table.insert(UI.Abas, ctn)
     table.insert(UI.BotoesAba, b)
 
-    -- Se for a aba "Visualizar", injeta o rosto nativo do Gengar dentro dela
     if nome == "Visualizar" then
         local gFace = Instance.new("Frame", ctn)
         gFace.Name, gFace.Size, gFace.Position, gFace.BackgroundTransparency, gFace.ZIndex = "GengarFace", UDim2.new(0, 300, 0, 180), UDim2.new(0, 50, 0, 40), 1, 2
@@ -107,18 +106,18 @@ function UI:CreateToggle(par, txt, posY, cKey, cb)
     local f = Instance.new("Frame", par)
     f.Size, f.Position, f.BackgroundColor3, f.BorderSizePixel, f.ZIndex = UDim2.new(1,-10,0,28), UDim2.new(0,5,0,posY), Color3.fromRGB(24,20,32), 0, 4
     Instance.new("UICorner", f).CornerRadius = UDim.new(0,5)
-    
+
     local l = Instance.new("TextLabel", f)
     l.Size, l.Position, l.Text, l.TextColor3, l.TextSize, l.BackgroundTransparency, l.ZIndex, l.TextXAlignment = UDim2.new(0.7,0,1,0), UDim2.new(0,10,0,0), txt, Color3.fromRGB(245, 245, 250), 12, 1, 4, Enum.TextXAlignment.Left
-    
+
     local btn = Instance.new("TextButton", f)
     btn.Size, btn.Position, btn.Text, btn.ZIndex = UDim2.new(0,40,0,16), UDim2.new(1,-50,0.5,-8), "", 4
     Instance.new("UICorner", btn).CornerRadius = UDim.new(1,0)
-    
+
     local ind = Instance.new("Frame", btn)
     ind.Size, ind.ZIndex = UDim2.new(0,12,0,12), 4
     Instance.new("UICorner", ind).CornerRadius = UDim.new(1,0)
-    
+
     local function upd()
         if _G.ConfigData[cKey] then
             btn.BackgroundColor3, ind.Position, ind.BackgroundColor3 = Color3.fromHex("#3800FF"), UDim2.new(1,-14,0.5,-6), Color3.fromRGB(255,255,255)
@@ -127,7 +126,7 @@ function UI:CreateToggle(par, txt, posY, cKey, cb)
         end
     end
     upd()
-    
+
     btn.MouseButton1Click:Connect(function()
         if _G.LombraHubAtivo == false then return end
         _G.ConfigData[cKey] = not _G.ConfigData[cKey]
@@ -136,19 +135,18 @@ function UI:CreateToggle(par, txt, posY, cKey, cb)
     end)
 end
 
--- Função para criar botões simples de ação direta (como o Rejoin)
 function UI:CreateButton(par, txt, posY, cb)
     local f = Instance.new("Frame", par)
     f.Size, f.Position, f.BackgroundColor3, f.BorderSizePixel, f.ZIndex = UDim2.new(1,-10,0,28), UDim2.new(0,5,0,posY), Color3.fromRGB(24,20,32), 0, 4
     Instance.new("UICorner", f).CornerRadius = UDim.new(0,5)
-    
+
     local l = Instance.new("TextLabel", f)
     l.Size, l.Position, l.Text, l.TextColor3, l.TextSize, l.BackgroundTransparency, l.ZIndex, l.TextXAlignment = UDim2.new(0.6,0,1,0), UDim2.new(0,10,0,0), txt, Color3.fromRGB(245, 245, 250), 12, 1, 4, Enum.TextXAlignment.Left
-    
+
     local btn = Instance.new("TextButton", f)
     btn.Size, btn.Position, btn.BackgroundColor3, btn.Text, btn.TextColor3, btn.TextSize, btn.Font, btn.ZIndex = UDim2.new(0,70,0,18), UDim2.new(1,-80,0.5,-9), C_PURP, "Executar", C_WHT, 11, Enum.Font.SourceSansBold, 4
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0,4)
-    
+
     btn.MouseButton1Click:Connect(function()
         if _G.LombraHubAtivo == false then return end
         task.spawn(cb)
