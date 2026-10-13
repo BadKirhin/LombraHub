@@ -1,7 +1,6 @@
 if _G.EncerrarScriptCompleto then _G.EncerrarScriptCompleto() end
 
 _G.LombraHubAtivo = true
--- REMOVIDO: AutoComprar e AutoAbrir foram completamente eliminados da existência
 _G.ConfigData = {AntiAFK=false, FpsBoost=false, BlackScreen=false, AutoStart=false, AutoPlay=false, AutoArise=false}
 
 local buster = "?cache=" .. math.random(1, 99999)
