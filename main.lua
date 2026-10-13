@@ -1,7 +1,7 @@
 if _G.EncerrarScriptCompleto then _G.EncerrarScriptCompleto() end
 
 _G.LombraHubAtivo = true
-_G.ConfigData = {AntiAFK=false, FpsBoost=false, BlackScreen=false, AutoComprar=false, AutoAbrir=false, AutoStart=false, AutoPlay=false}
+_G.ConfigData = {AntiAFK=false, FpsBoost=false, BlackScreen=false, AutoStart=false, AutoPlay=false, AutoArise=false}
 
 local buster = "?cache=" .. math.random(1, 99999)
 
@@ -17,8 +17,7 @@ local tabMisc = UiLibrary:CreateTab("Misc", "⚙️")
 -- ⚙️ Elementos da Aba Game
 UiLibrary:CreateToggle(tabGame, "Auto Start Partida (Waves)", 5, "AutoStart", Functions.AutoStart)
 UiLibrary:CreateToggle(tabGame, "Auto Play Partida (Autoplay)", 38, "AutoPlay", Functions.AutoPlay)
-UiLibrary:CreateToggle(tabGame, "Comprar Fenda Temporal (Auto Shop)", 71, "AutoComprar", Functions.AutoComprar)
-UiLibrary:CreateToggle(tabGame, "Abrir Fenda (Auto The Almighty)", 104, "AutoAbrir", Functions.AutoAbrir)
+UiLibrary:CreateToggle(tabGame, "Auto Arise Monarca (Auto Spawn)", 71, "AutoArise", Functions.AutoArise)
 
 -- ⚙️ Elementos da Aba Misc
 UiLibrary:CreateToggle(tabMisc, "Anti-AFK (Pulo Simulado)", 5, "AntiAFK", Functions.AntiAFK)
