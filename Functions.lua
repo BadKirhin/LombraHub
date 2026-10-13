@@ -3,14 +3,32 @@ local p = game:GetService("Players").LocalPlayer
 local vIM = game:GetService("VirtualInputManager")
 local lit = game:GetService("Lighting")
 local rS = game:GetService("RunService")
-
--- Sequenciador de pacotes dinâmicos exigido pelo protocolo Blink
-local arisePacketSequence = 33
+local tS = game:GetService("TweenService") -- Serviço de movimentação suave
 
 local function buf(l)
     local b = buffer.create(#l)
     for i=1,#l do buffer.writeu8(b, i-1, l[i]) end
     return b
+end
+
+-- Função auxiliar interna para realizar o deslocamento via Tween suave
+local function tweenTo(targetCFrame)
+    local char = p.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+
+    -- Velocidade de deslocamento equilibrada (Studs por segundo) para não dar kick
+    local velocidade = 250 
+    local distancia = (hrp.Position - targetCFrame.Position).Magnitude
+    local duracao = distancia / velocidade
+
+    -- Garante que se estiver muito perto, não demore nada
+    if duracao < 0.1 then duracao = 0.1 end 
+
+    local ti = TweenInfo.new(duracao, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+    local t = tS:Create(hrp, ti, {CFrame = targetCFrame})
+    t:Play()
+    t.Completed:Wait() -- Aguarda o personagem concluir a chegada física
 end
 
 function F.AutoStart(e)
@@ -29,55 +47,61 @@ function F.AutoPlay(e)
     end
 end
 
-function F.AutoAbrir(e)
-    while e and _G.LombraHubAtivo and _G.ConfigData.AutoAbrir do
-        local r = game:GetService("ReplicatedStorage"):FindFirstChild("AV_LOBBY_SPECIAL_EVENTS_V1_BLINK_RELIABLE_REMOTE")
-        if r then r:FireServer(buf({14,12,84,104,101,32,65,108,109,105,103,104,116,121}), {}) end
-        task.wait(4)
-    end
-end
-
 function F.AutoArise(e)
-    while e and _G.LombraHubAtivo and _G.ConfigData.AutoArise do
-        -- Acessa com segurança a hierarquia da Câmera descoberta no Dex
-        local cam = workspace:FindFirstChildOfClass("Camera")
-        local clientWorld = cam and cam:FindFirstChild("ClientWorld")
-        local mapEffects = clientWorld and clientWorld:FindFirstChild("MapEffects")
-        
-        if mapEffects then
-            for _, obj in pairs(mapEffects:GetChildren()) do
-                -- Alvo: Modelos dos NPCs mortos (MonarchArise_...)
-                if string.sub(obj.Name, 1, 13) == "MonarchArise_" then
-                    
-                    -- Localiza o ProximityPrompt na estrutura interna exata
-                    local hrp = obj:FindFirstChild("HumanoidRootPart")
-                    local anchor = hrp and hrp:FindFirstChild("ArisePromptAnchor")
-                    local prompt = anchor and anchor:FindFirstChild("MonarchArise")
-                    
-                    -- Se o prompt existir e estiver habilitado para cliques
-                    if prompt and prompt:IsA("ProximityPrompt") then
-                        -- Força o prompt a ficar visível e ativo independente da distância do jogador
-                        prompt.RequiresLineOfSight = false
-                        prompt.MaxActivationDistance = 9999
+    task.spawn(function()
+        while e and _G.LombraHubAtivo and _G.ConfigData.AutoArise do
+            local cam = workspace:FindFirstChildOfClass("Camera")
+            local clientWorld = cam and cam:FindFirstChild("ClientWorld")
+            local mapEffects = clientWorld and clientWorld:FindFirstChild("MapEffects")
+            
+            local char = p.Character
+            local hrp = char and char:FindFirstChild("HumanoidRootPart")
+            
+            if mapEffects and hrp then
+                for _, obj in pairs(mapEffects:GetChildren()) do
+                    -- Alvo: Verifica os modelos que começam com o padrão de monarca morto
+                    if string.sub(obj.Name, 1, 13) == "MonarchArise_" then
                         
-                        -- EXECUÇÃO NATIVA: Usa a função interna do executor para simular a interação física
-                        -- Isso faz com que o próprio jogo gere o Buffer perfeito e assinado para o servidor.
-                        if fireproximityprompt then
-                            fireproximityprompt(prompt, 1)
-                        else
-                            -- Fallback caso o seu executor use a nomenclatura alternativa
-                            prompt:InputHoldBegin()
-                            task.wait(0.05)
-                            prompt:InputHoldEnd()
+                        local npcHrp = obj:FindFirstChild("HumanoidRootPart")
+                        local anchor = npcHrp and npcHrp:FindFirstChild("ArisePromptAnchor")
+                        local prompt = anchor and anchor:FindFirstChild("MonarchArise")
+                        
+                        -- Se o prompt e a parte física do NPC existirem no frame atual
+                        if prompt and prompt:IsA("ProximityPrompt") and npcHrp and prompt.Enabled then
+                            -- Guarda onde você estava defendendo a rota originalmente
+                            local posicaoOriginal = hrp.CFrame
+                            
+                            -- Garante visibilidade e ativação máxima do gatilho
+                            prompt.RequiresLineOfSight = false
+                            prompt.MaxActivationDistance = 30
+                            
+                            -- 1. TWEEN DE IDA: Desloca o personagem suavemente até o monstro
+                            tweenTo(npcHrp.CFrame + Vector3.new(0, 3, 0))
+                            task.wait(0.1) -- Tempo de acomodação física da rede (100ms)
+                            
+                            -- 2. INTERAÇÃO NATIVA: Ativa o gatilho físico
+                            if fireproximityprompt then
+                                fireproximityprompt(prompt, 1)
+                            else
+                                prompt:InputHoldBegin()
+                                task.wait(0.1)
+                                prompt:InputHoldEnd()
+                            end
+                            
+                            task.wait(0.1) -- Aguarda o servidor computar o Arise
+                            
+                            -- 3. TWEEN DE VOLTA: Retorna o jogador para sua posição de origem de forma limpa
+                            tweenTo(posicaoOriginal)
+                            
+                            task.wait(0.3) -- Pequena folga anti-glitch antes de ir para o próximo alvo
                         end
                     end
                 end
             end
+            task.wait(0.5) -- Nova varredura de corpos na tela a cada 500ms
         end
-        task.wait(0.3) -- Varredura ultra rápida (300ms) para limpar os monstros mortos da tela
-    end
+    end)
 end
-
 
 function F.AntiAFK(e)
     while e and _G.LombraHubAtivo and _G.ConfigData.AntiAFK do
