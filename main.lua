@@ -17,8 +17,6 @@ local tabMisc = UiLibrary:CreateTab("Misc", "⚙️")
 -- ⚙️ Elementos da Aba Game
 UiLibrary:CreateToggle(tabGame, "Auto Start Partida (Waves)", 5, "AutoStart", Functions.AutoStart)
 UiLibrary:CreateToggle(tabGame, "Auto Play Partida (Autoplay)", 38, "AutoPlay", Functions.AutoPlay)
-UiLibrary:CreateToggle(tabGame, "Comprar Fenda Temporal (Auto Shop)", 71, "AutoComprar", Functions.AutoComprar)
-UiLibrary:CreateToggle(tabGame, "Abrir Fenda (Auto The Almighty)", 104, "AutoAbrir", Functions.AutoAbrir)
 UiLibrary:CreateToggle(tabGame, "Auto Arise Monarca (Tween Farm)", 137, "AutoArise", Functions.AutoArise)
 
 -- ⚙️ Elementos da Aba Misc
