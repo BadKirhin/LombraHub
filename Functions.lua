@@ -46,8 +46,6 @@ function F.AutoPlay(e)
     end
 end
 
--- REMOVIDAS: F.AutoComprar e F.AutoAbrir foram completamente deletadas
-
 function F.AutoArise(e)
     task.spawn(function()
         while e and _G.LombraHubAtivo and _G.ConfigData.AutoArise do
@@ -70,31 +68,34 @@ function F.AutoArise(e)
                         if prompt and prompt:IsA("ProximityPrompt") and npcHrp and prompt.Enabled and obj.Parent then
                             local posicaoOriginal = hrp.CFrame
                             
+                            -- Garante que o prompt possa ser ativado sem restrições visuais
                             prompt.RequiresLineOfSight = false
                             prompt.MaxActivationDistance = 35
                             
                             -- 1. IDA: Executa o Tween até o NPC morto
                             tweenTo(npcHrp.CFrame + Vector3.new(0, 3, 0))
-                            task.wait(0.15) -- Delay de ancoragem (aguarda o motor de física reconhecer a posição)
+                            task.wait(0.2) -- Delay ligeiramente maior para garantir que a UI do prompt carregou na tela do cliente
                             
-                            -- 2. INTERAÇÃO ROBUSTA: Simula o clique segurado dinamicamente baseado na HoldDuration
-                            if fireproximityprompt then
-                                fireproximityprompt(prompt, 1)
-                            else
-                                -- Fallback simulando a pressão contínua exigida pelo prompt nativo
-                                prompt:InputHoldBegin()
-                                -- Se o prompt exigir tempo de espera, segura pelo tempo necessário + margem de rede
-                                local duration = prompt.HoldDuration > 0 and (prompt.HoldDuration + 0.1) or 0.25
-                                task.wait(duration)
-                                prompt:InputHoldEnd()
-                            end
+                            -- 2. INTERAÇÃO FÍSICA (Mouse/Teclado Virtual)
+                            -- Descobre qual tecla o prompt usa (geralmente Enum.KeyCode.E)
+                            local teclaInteracao = prompt.KeyboardKeyCode or Enum.KeyCode.E
                             
-                            task.wait(0.2) -- Janela de confirmação: Tempo necessário para o servidor processar e sumir com o corpo
+                            -- Simula o pressionamento físico (Key Down)
+                            vIM:SendKeyEvent(true, teclaInteracao, false, game)
                             
-                            -- 3. VOLTA: Retorna o jogador para o ponto inicial de defesa
+                            -- Calcula o tempo necessário para segurar baseado na configuração do prompt + folga de rede
+                            local duration = prompt.HoldDuration > 0 and (prompt.HoldDuration + 0.15) or 0.3
+                            task.wait(duration)
+                            
+                            -- Simula a soltura da tecla (Key Up)
+                            vIM:SendKeyEvent(false, teclaInteracao, false, game)
+                            
+                            task.wait(0.25) -- Janela de confirmação para o servidor processar a morte do corpo
+                            
+                            -- 3. VOLTA: Retorna o jogador para o ponto inicial
                             tweenTo(posicaoOriginal)
                             
-                            task.wait(0.4) -- Delay de respiro pós-interpolação antes de buscar o próximo alvo
+                            task.wait(0.4) -- Delay de respiro antes de ir para o próximo alvo
                         end
                     end
                 end
