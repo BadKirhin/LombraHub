@@ -3,7 +3,7 @@ local p = game:GetService("Players").LocalPlayer
 local vIM = game:GetService("VirtualInputManager")
 local lit = game:GetService("Lighting")
 local rS = game:GetService("RunService")
-local tS = game:GetService("TweenService") -- Serviço de movimentação suave
+local tS = game:GetService("TweenService")
 
 local function buf(l)
     local b = buffer.create(#l)
@@ -17,18 +17,17 @@ local function tweenTo(targetCFrame)
     local hrp = char and char:FindFirstChild("HumanoidRootPart")
     if not hrp then return end
 
-    -- Velocidade de deslocamento equilibrada (Studs por segundo) para não dar kick
-    local velocidade = 250 
+    local velocidade = 230 -- Velocidade segura para não acionar detecções de rubberbanding
     local distancia = (hrp.Position - targetCFrame.Position).Magnitude
     local duracao = distancia / velocidade
 
-    -- Garante que se estiver muito perto, não demore nada
     if duracao < 0.1 then duracao = 0.1 end 
 
     local ti = TweenInfo.new(duracao, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
     local t = tS:Create(hrp, ti, {CFrame = targetCFrame})
     t:Play()
-    t.Completed:Wait() -- Aguarda o personagem concluir a chegada física
+    t.Completed:Wait()
+    hrp.Velocity = Vector3.new(0,0,0) -- Zera a inércia imediatamente após a chegada para não passar direto
 end
 
 function F.AutoStart(e)
@@ -47,6 +46,8 @@ function F.AutoPlay(e)
     end
 end
 
+-- REMOVIDAS: F.AutoComprar e F.AutoAbrir foram completamente deletadas
+
 function F.AutoArise(e)
     task.spawn(function()
         while e and _G.LombraHubAtivo and _G.ConfigData.AutoArise do
@@ -59,46 +60,46 @@ function F.AutoArise(e)
             
             if mapEffects and hrp then
                 for _, obj in pairs(mapEffects:GetChildren()) do
-                    -- Alvo: Verifica os modelos que começam com o padrão de monarca morto
                     if string.sub(obj.Name, 1, 13) == "MonarchArise_" then
                         
                         local npcHrp = obj:FindFirstChild("HumanoidRootPart")
                         local anchor = npcHrp and npcHrp:FindFirstChild("ArisePromptAnchor")
                         local prompt = anchor and anchor:FindFirstChild("MonarchArise")
                         
-                        -- Se o prompt e a parte física do NPC existirem no frame atual
-                        if prompt and prompt:IsA("ProximityPrompt") and npcHrp and prompt.Enabled then
-                            -- Guarda onde você estava defendendo a rota originalmente
+                        -- Verifica se o corpo ainda é válido e se o prompt está ativo e visível
+                        if prompt and prompt:IsA("ProximityPrompt") and npcHrp and prompt.Enabled and obj.Parent then
                             local posicaoOriginal = hrp.CFrame
                             
-                            -- Garante visibilidade e ativação máxima do gatilho
                             prompt.RequiresLineOfSight = false
-                            prompt.MaxActivationDistance = 30
+                            prompt.MaxActivationDistance = 35
                             
-                            -- 1. TWEEN DE IDA: Desloca o personagem suavemente até o monstro
+                            -- 1. IDA: Executa o Tween até o NPC morto
                             tweenTo(npcHrp.CFrame + Vector3.new(0, 3, 0))
-                            task.wait(0.1) -- Tempo de acomodação física da rede (100ms)
+                            task.wait(0.15) -- Delay de ancoragem (aguarda o motor de física reconhecer a posição)
                             
-                            -- 2. INTERAÇÃO NATIVA: Ativa o gatilho físico
+                            -- 2. INTERAÇÃO ROBUSTA: Simula o clique segurado dinamicamente baseado na HoldDuration
                             if fireproximityprompt then
                                 fireproximityprompt(prompt, 1)
                             else
+                                -- Fallback simulando a pressão contínua exigida pelo prompt nativo
                                 prompt:InputHoldBegin()
-                                task.wait(0.1)
+                                -- Se o prompt exigir tempo de espera, segura pelo tempo necessário + margem de rede
+                                local duration = prompt.HoldDuration > 0 and (prompt.HoldDuration + 0.1) or 0.25
+                                task.wait(duration)
                                 prompt:InputHoldEnd()
                             end
                             
-                            task.wait(0.1) -- Aguarda o servidor computar o Arise
+                            task.wait(0.2) -- Janela de confirmação: Tempo necessário para o servidor processar e sumir com o corpo
                             
-                            -- 3. TWEEN DE VOLTA: Retorna o jogador para sua posição de origem de forma limpa
+                            -- 3. VOLTA: Retorna o jogador para o ponto inicial de defesa
                             tweenTo(posicaoOriginal)
                             
-                            task.wait(0.3) -- Pequena folga anti-glitch antes de ir para o próximo alvo
+                            task.wait(0.4) -- Delay de respiro pós-interpolação antes de buscar o próximo alvo
                         end
                     end
                 end
             end
-            task.wait(0.5) -- Nova varredura de corpos na tela a cada 500ms
+            task.wait(0.4)
         end
     end)
 end
