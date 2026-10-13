@@ -29,14 +29,6 @@ function F.AutoPlay(e)
     end
 end
 
-function F.AutoComprar(e)
-    while e and _G.LombraHubAtivo and _G.ConfigData.AutoComprar do
-        local r = game:GetService("ReplicatedStorage"):FindFirstChild("AV_LOBBY_EVENT_SHOPS_V1_BLINK_RELIABLE_REMOTE")
-        if r then r:FireServer(buf({4,13,1,0,84,101,109,112,111,114,97,108,32,82,105,102,116}), {}) end
-        task.wait(3)
-    end
-end
-
 function F.AutoAbrir(e)
     while e and _G.LombraHubAtivo and _G.ConfigData.AutoAbrir do
         local r = game:GetService("ReplicatedStorage"):FindFirstChild("AV_LOBBY_SPECIAL_EVENTS_V1_BLINK_RELIABLE_REMOTE")
@@ -47,53 +39,45 @@ end
 
 function F.AutoArise(e)
     while e and _G.LombraHubAtivo and _G.ConfigData.AutoArise do
-        local r = game:GetService("ReplicatedStorage"):FindFirstChild("AV_GAME_MONARCH_ARISE_V1_BLINK_RELIABLE_REMOTE")
-        if r then
-            -- Mapeia o caminho exato descoberto no Dex Explorer dentro da câmera ativa
-            local cam = workspace:FindFirstChildOfClass("Camera")
-            local clientWorld = cam and cam:FindFirstChild("ClientWorld")
-            local mapEffects = clientWorld and clientWorld:FindFirstChild("MapEffects")
-            
-            if mapEffects then
-                for _, obj in pairs(mapEffects:GetChildren()) do
-                    -- Verifica se o nome do modelo começa com o prefixo do Arise
-                    if string.sub(obj.Name, 1, 13) == "MonarchArise_" then
-                        -- Corta o prefixo e isola apenas o UUID (Ex: 2478ae8a-be67...)
-                        local uuid = string.sub(obj.Name, 14)
+        -- Acessa com segurança a hierarquia da Câmera descoberta no Dex
+        local cam = workspace:FindFirstChildOfClass("Camera")
+        local clientWorld = cam and cam:FindFirstChild("ClientWorld")
+        local mapEffects = clientWorld and clientWorld:FindFirstChild("MapEffects")
+        
+        if mapEffects then
+            for _, obj in pairs(mapEffects:GetChildren()) do
+                -- Alvo: Modelos dos NPCs mortos (MonarchArise_...)
+                if string.sub(obj.Name, 1, 13) == "MonarchArise_" then
+                    
+                    -- Localiza o ProximityPrompt na estrutura interna exata
+                    local hrp = obj:FindFirstChild("HumanoidRootPart")
+                    local anchor = hrp and hrp:FindFirstChild("ArisePromptAnchor")
+                    local prompt = anchor and anchor:FindFirstChild("MonarchArise")
+                    
+                    -- Se o prompt existir e estiver habilitado para cliques
+                    if prompt and prompt:IsA("ProximityPrompt") then
+                        -- Força o prompt a ficar visível e ativo independente da distância do jogador
+                        prompt.RequiresLineOfSight = false
+                        prompt.MaxActivationDistance = 9999
                         
-                        -- Garante que o ProximityPrompt ainda existe e está ativo na hierarquia interna
-                        local hrp = obj:FindFirstChild("HumanoidRootPart")
-                        local anchor = hrp and hrp:FindFirstChild("ArisePromptAnchor")
-                        local prompt = anchor and anchor:FindFirstChild("MonarchArise")
-                        
-                        if prompt and type(uuid) == "string" and #uuid >= 30 then
-                            -- Estrutura inicial do buffer gravada pelo Cobalt: 4 (ação), contador de pacotes, zeros, indexador (2)
-                            local bytesTable = {4, arisePacketSequence, 0, 0, 0, 2}
-                            
-                            -- Injeta o UUID convertido caractere por caractere para formato ASCII
-                            for i = 1, #uuid do
-                                table.insert(bytesTable, string.byte(uuid, i))
-                            end
-                            
-                            -- Constrói o objeto de buffer físico e envia ao servidor
-                            local finalBuffer = buffer.create(#bytesTable)
-                            for i = 1, #bytesTable do
-                                buffer.writeu8(finalBuffer, i - 1, bytesTable[i])
-                            end
-                            
-                            r:FireServer(finalBuffer, nil)
-                            
-                            -- Incrementa o contador de forma rotativa (Blink Protocol requirements)
-                            arisePacketSequence = (arisePacketSequence >= 255) and 1 or (arisePacketSequence + 1)
-                            task.wait(0.1) -- Proteção rápida anti-kick por spam de rede
+                        -- EXECUÇÃO NATIVA: Usa a função interna do executor para simular a interação física
+                        -- Isso faz com que o próprio jogo gere o Buffer perfeito e assinado para o servidor.
+                        if fireproximityprompt then
+                            fireproximityprompt(prompt, 1)
+                        else
+                            -- Fallback caso o seu executor use a nomenclatura alternativa
+                            prompt:InputHoldBegin()
+                            task.wait(0.05)
+                            prompt:InputHoldEnd()
                         end
                     end
                 end
             end
         end
-        task.wait(0.8) -- Varre a pasta de efeitos periodicamente à procura de novos abates
+        task.wait(0.3) -- Varredura ultra rápida (300ms) para limpar os monstros mortos da tela
     end
 end
+
 
 function F.AntiAFK(e)
     while e and _G.LombraHubAtivo and _G.ConfigData.AntiAFK do
