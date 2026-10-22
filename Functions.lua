@@ -112,7 +112,7 @@ function F.AntiAFK(e)
             vIM:SendKeyEvent(true, Enum.KeyCode.Space, false, game) task.wait(0.05)
             vIM:SendKeyEvent(false, Enum.KeyCode.Space, false, game)
         end
-        task.wait(10)
+        task.wait(60)
     end
 end
 
