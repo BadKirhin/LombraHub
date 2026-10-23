@@ -153,4 +153,15 @@ function UI:CreateButton(par, txt, posY, cb)
     end)
 end
 
+function UI:CreateSection(par, txt, posY)
+    local sFrame = Instance.new("Frame", par)
+    sFrame.Size, sFrame.Position, sFrame.BackgroundTransparency, sFrame.ZIndex = UDim2.new(1, -10, 0, 20), UDim2.new(0, 5, 0, posY), 1, 4
+
+    local line = Instance.new("Frame", sFrame)
+    line.Size, line.Position, line.BackgroundColor3, line.BorderSizePixel, line.ZIndex = UDim2.new(1, 0, 0, 1), UDim2.new(0, 0, 0, 10), Color3.fromRGB(45, 35, 65), 0, 4
+
+    local lbl = Instance.new("TextLabel", sFrame)
+    lbl.Size, lbl.Position, lbl.BackgroundColor3, lbl.Text, lbl.TextColor3, lbl.TextSize, lbl.Font, lbl.ZIndex, lbl.TextXAlignment = UDim2.new(0, #txt * 7 + 10, 1, 0), UDim2.new(0, 10, 0, 0), Color3.fromRGB(15, 10, 25), "  " .. txt .. "  ", Color3.fromRGB(140, 110, 250), 11, Enum.Font.SourceSansBold, 5, Enum.TextXAlignment.Left
+end
+
 return UI
