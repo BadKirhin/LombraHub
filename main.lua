@@ -14,10 +14,30 @@ local tabVisual = UiLibrary:CreateTab("Visualizar", "👻")
 local tabGame = UiLibrary:CreateTab("Game", "🎮")
 local tabMisc = UiLibrary:CreateTab("Misc", "⚙️")
 
--- ⚙️ Elementos da Aba Game (Apenas automações de partida limpas)
-UiLibrary:CreateToggle(tabGame, "Auto Start Partida (Waves)", 5, "AutoStart", Functions.AutoStart)
-UiLibrary:CreateToggle(tabGame, "Auto Play Partida (Autoplay)", 38, "AutoPlay", Functions.AutoPlay)
-UiLibrary:CreateToggle(tabGame, "Auto Arise Monarca (Hold Tween)", 71, "AutoArise", Functions.AutoArise)
+_G.ConfigData = {
+    AntiAFK = false, 
+    FpsBoost = false, 
+    BlackScreen = false, 
+    AutoStart = false, 
+    AutoPlay = false, 
+    AutoArise = false, 
+    AutoQuestDante = false, -- Novo estado
+    AutoSpawnDante = false  -- Novo estado
+}
+
+-- ... (código intermediário de carregamento das tabelas e criação das abas) ...
+
+-- 🎮 Elementos da Aba Game
+-- Sessão 1: Automações gerais da partida
+UiLibrary:CreateSection(tabGame, "AUTOMAÇÕES DA PARTIDA", 5)
+UiLibrary:CreateToggle(tabGame, "Auto Start Partida (Waves)", 30, "AutoStart", Functions.AutoStart)
+UiLibrary:CreateToggle(tabGame, "Auto Play Partida (Autoplay)", 63, "AutoPlay", Functions.AutoPlay)
+UiLibrary:CreateToggle(tabGame, "Auto Arise Monarca (Hold Tween)", 96, "AutoArise", Functions.AutoArise)
+
+-- Sessão 2: Separador visual para o evento/chefão Dante
+UiLibrary:CreateSection(tabGame, "BOSS & MISSÕES (DANTE)", 134)
+UiLibrary:CreateToggle(tabGame, "Auto Aceitar Quest Dante", 159, "AutoQuestDante", Functions.AutoQuestDante)
+UiLibrary:CreateToggle(tabGame, "Auto Spawn Dante (Medium)", 192, "AutoSpawnDante", Functions.AutoSpawnDante)
 
 -- ⚙️ Elementos da Aba Misc
 UiLibrary:CreateToggle(tabMisc, "Anti-AFK (Pulo Simulado)", 5, "AntiAFK", Functions.AntiAFK)
