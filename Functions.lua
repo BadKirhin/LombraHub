@@ -140,4 +140,39 @@ function F.Rejoin()
     end
 end
 
+function F.AutoQuestDante(e)
+    task.spawn(function()
+        while e and _G.LombraHubAtivo and _G.ConfigData.AutoQuestDante do
+            local r = game:GetService("ReplicatedStorage"):FindFirstChild("RemoteEvents")
+            local event = r and r:FindFirstChild("QuestAccept")
+            
+            if event then
+                -- Checagem dupla: tenta ler se o leaderstats resetou ou faz por loop de tempo
+                local stats = p:FindFirstChild("leaderstats")
+                local contador = stats and (stats:FindFirstChild("Bosses") or stats:FindFirstChild("Kills") or stats:FindFirstChild("DanteQuest"))
+                
+                if not contador or (contador and contador.Value >= 10 or contador.Value == 0) then
+                    event:FireServer("Dantequest")
+                end
+            end
+            task.wait(5) -- Segurança de 5 segundos para processar o clique e não floodar
+        end
+    end)
+end
+
+function F.AutoSpawnDante(e)
+    task.spawn(function()
+        while e and _G.LombraHubAtivo and _G.ConfigData.AutoSpawnDante do
+            local r = game:GetService("ReplicatedStorage"):FindFirstChild("RemoteEvents")
+            local event = r and r:FindFirstChild("RequestSpawnDante")
+            
+            -- Só spawna se as Waves já tiverem começado (evita quebrar no Lobby)
+            if event and workspace:FindFirstChild("MapEffects") or game.PlaceId ~= 0 then
+                event:FireServer("Medium")
+            end
+            task.wait(2) -- Tempo de resposta do servidor para instanciar o Boss
+        end
+    end)
+end
+
 return F
